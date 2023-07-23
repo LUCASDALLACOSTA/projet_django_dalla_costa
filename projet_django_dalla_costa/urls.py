@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from gestion_materiel.views import accueil, liste_enseignants
+from gestion_materiel.views import accueil, liste_enseignants, ajout_enseignant
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('gestion_materiel/accueil', accueil, name='accueil'),
     path('gestion_materiel/enseignant/liste_enseignants', liste_enseignants, name='liste_enseignants'),
+    path('gestion_materiel/enseignant/ajout_enseignant', ajout_enseignant, name='ajout_enseignant'),
 ]
 
