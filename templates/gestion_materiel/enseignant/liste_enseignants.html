@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des enseignants</title>
+</head>
+<body>
+    {% include 'gestion_materiel/includes/entete.html' %}
+
+    <div class="container">
+        <h1>Liste des enseignants</h1>
+        <ul>
+            <h4>Nom Prénom</h4>
+            {% for enseignant in enseignants %}
+                <li>{{ enseignant.nom }} {{ enseignant.prenom }}</li>
+            {% empty %}
+                <li>Aucun enseignant trouvé.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
