@@ -4,61 +4,101 @@
     <title>Page d'accueil</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
-        /* Styles personnalisés pour l'entête */
-        .navbar {
-            background-color: #333;
-        }
         .navbar-brand {
             color: #fff;
             font-size: 24px;
+            margin: 10px;
         }
         .navbar-nav .nav-link {
             color: #fff;
             font-size: 18px;
+            margin: 5px 10px;
+            border-radius: 5px;
+            padding: 8px 12px;
         }
-        .navbar-nav .nav-link:hover {
-            color: #ccc;
+        .navbar-nav .nav-link:hover,
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+        }
+        .messages h2 {
+            font-size: 18px;
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .messages h2.success {
+            background-color: #c3e6cb;
+            color: #155724;
+        }
+        .messages h2.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .vertical-navbar {
+            background-color: #007bff;
+            height: 100vh;
+            width: 200px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 20px;
+        }
+        .vertical-navbar .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .vertical-navbar .dropdown:hover .dropdown-menu {
+            display: block;
+            background-color: #0099ff;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="vertical-navbar">
         <a class="navbar-brand" href="/gestion_materiel/accueil">Accueil</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Enseignant
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/gestion_materiel/enseignant/ajout_enseignant">Ajouter enseignant</a>
-                        <a class="dropdown-item" href="/gestion_materiel/enseignant/liste_enseignants">Liste des enseignants</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/materiel/">Matériel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/possession/">Possession</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <h2 style="color: {% if 'danger' in message.tags %}red{% else %}green{% endif %}; margin-left: 174px;">{{ message }}</h2>
-            {% endfor %}
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown"> Enseignant </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/gestion_materiel/enseignant/liste_enseignants" style="color: #fff;">Liste des enseignants</a>
+                    <a class="dropdown-item" href="/gestion_materiel/enseignant/ajout_enseignant" style="color: #fff;">Ajouter un enseignant</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown"> Salle </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/gestion_materiel/salle/liste_salles" style="color: #fff;">Liste des salles</a>
+                    <a class="dropdown-item" href="/gestion_materiel/salle/ajout_salle" style="color: #fff;">Ajouter une salle</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/materiel/">Matériel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/possession/">Possession</a>
+            </li>
         </ul>
-    {% endif %}
+    </div>
 
+    <div style="margin-left: 220px; padding: 20px;">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <h2 style="color: {% if 'danger' in message.tags %}red{% else %}green{% endif %};">{{ message }}</h2>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>

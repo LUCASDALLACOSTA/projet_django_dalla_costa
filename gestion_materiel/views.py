@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle
-from .forms import EnseignantForm
+from .forms import EnseignantForm, SalleForm
 from django.contrib import messages
 
 def accueil(request):
@@ -29,6 +29,28 @@ def supprimer_enseignant(request, enseignant_id):
         messages.add_message(request, messages.SUCCESS, "L'enseignant a été supprimé avec succès", extra_tags='danger')
     return redirect('liste_enseignants')
 
+"""salle"""
+def liste_salles(request):
+    salles = Salle.objects.all()
+    return render(request, 'gestion_materiel/salle/liste_salles.html', {'salles': salles})
+
+def ajout_salle(request):
+    if request.method == 'POST':
+        form = SalleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Salle ajoutée avec succès')
+            return redirect('liste_salles')
+    else:
+        form = SalleForm()
+    return render(request, 'gestion_materiel/salle/ajout_salle.html', {'form': form})
+
+def supprimer_salle(request, salle_id):
+    salle = get_object_or_404(Salle, id=salle_id)
+    salle.delete()
+    messages.add_message(request, messages.SUCCESS, "La salle a été supprimée avec succès", extra_tags='danger')
+    return redirect('liste_salles')
+
 def liste_accessoires(request, materiel_id):
     materiel = Materiel.objects.get(id=materiel_id)
     accessoires = AccessoireMateriel.objects.filter(material=materiel)
@@ -42,19 +64,4 @@ def liste_materiels(request):
     materiels = Materiel.objects.all()
     return render(request, 'gestion_materiel/materiel/liste_materiels.html', {'materiels': materiels})
 
-"""salle"""
-def liste_salles(request):
-    salles = Salle.objects.all()
-    return render(request, 'gestion_materiel/salles/liste_salles.html', {'salles': salles})
 
-def ajout_salle(request):
-    if request.method == 'POST':
-        nom = request.POST.get('nom')
-        etage = request.POST.get('etage')
-        Salle.objects.create(nom=nom, etage=etage)
-        return redirect('liste_salles')
-    return render(request, 'gestion_materiel/salle/ajout_salle.html')
-def supprimer_salle(request, salle_id):
-    salle = get_object_or_404(Salle, id=salle_id)
-    salle.delete()
-    return redirect('liste_salles')
