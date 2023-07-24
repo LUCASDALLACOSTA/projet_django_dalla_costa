@@ -8,14 +8,33 @@
 
     <div class="container">
         <h1>Liste des enseignants</h1>
-        <ul>
-            <h4>Nom Prénom</h4>
-            {% for enseignant in enseignants %}
-                <li>{{ enseignant.nom }} {{ enseignant.prenom }}</li>
-            {% empty %}
-                <li>Aucun enseignant trouvé.</li>
-            {% endfor %}
-        </ul>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enseignant in enseignants %}
+                    <tr>
+                        <td>{{ enseignant.nom }}</td>
+                        <td>{{ enseignant.prenom }}</td>
+                        <td>
+                            <form method="post" action="{% url 'supprimer_enseignant' enseignant.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">Aucun enseignant trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

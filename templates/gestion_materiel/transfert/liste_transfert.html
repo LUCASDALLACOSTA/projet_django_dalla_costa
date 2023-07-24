@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des transferts de matériel</title>
+</head>
+<body>
+    {% include 'gestion_materiel/includes/entete.html' %}
+
+    <div class="container">
+        <h1>Liste des transferts de matériel</h1>
+        {% if transferts %}
+            <ul>
+                {% for transfert in transferts %}
+                    <li>{{ transfert.date_transfert }} - {{ transfert.material.nom }} : de {{ transfert.ancien_possesseur.nom }} {{ transfert.ancien_possesseur.prenom }} à {{ transfert.nouveau_possesseur.nom }} {{ transfert.nouveau_possesseur.prenom }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun transfert de matériel trouvé.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

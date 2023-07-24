@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Enseignant(models.Model):
     nom = models.CharField(
@@ -27,6 +28,9 @@ class Salle(models.Model):
         null=True,
         default='aucun'
     )
+
+    def get_delete_url(self):
+        return reverse('supprimer_salle', kwargs={'salle_id': self.id})
 
 
 class Materiel(models.Model):
@@ -59,6 +63,9 @@ class Materiel(models.Model):
         null=True,
         related_name='materiels_en_possession'  # Accesseur inverse unique pour la relation ForeignKey possesseur
     )
+
+    def get_accessoires_url(self):
+        return reverse('liste_accessoires', args=[self.id])
 
 class TransfertMateriel(models.Model):
     material = models.ForeignKey(
