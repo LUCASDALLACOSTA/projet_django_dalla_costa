@@ -29,10 +29,12 @@ urlpatterns = [
     path('gestion_materiel/enseignant/<int:enseignant_id>/supprimer', views.supprimer_enseignant, name='supprimer_enseignant'),
 
     path('gestion_materiel/salle/liste_salles', liste_salles, name='liste_salles'),
+    path('liste_materiels_salle/<int:salle_id>/', views.liste_materiels_salle, name='liste_materiels_salle'),
     path('gestion_materiel/salle/ajout_salle', ajout_salle, name='ajout_salle'),
     path('gestion_materiel/salle/supprimer/<int:salle_id>/', views.supprimer_salle, name='supprimer_salle'),
 
     path('gestion_materiel/materiel/liste_materiels', liste_materiels, name='liste_materiels'),
+    path('gestion_materiel/materiel/supprimer/<int:materiel_id>/', views.supprimer_materiel, name='supprimer_materiel'),
 
     path('gestion_materiel/materiel/<int:materiel_id>/accessoires/', liste_accessoires, name='liste_accessoires'),
 

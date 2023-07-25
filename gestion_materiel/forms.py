@@ -11,8 +11,8 @@ class SalleForm(forms.ModelForm):
     ETAGE_CHOICES = (
         ('rez-de-chaussee', 'Rez-de-chaussée'),
         ('1er', '1er étage'),
-        ('2e', '2eme étage'),
-        ('3e', '3eme étage'),
+        ('2e', '2ème étage'),
+        ('3e', '3ème étage'),
 
     )
 

@@ -34,6 +34,11 @@ def liste_salles(request):
     salles = Salle.objects.all()
     return render(request, 'gestion_materiel/salle/liste_salles.html', {'salles': salles})
 
+def liste_materiels_salle(request, salle_id):
+    salle = get_object_or_404(Salle, id=salle_id)
+    materiels = Materiel.objects.filter(lieu=salle)
+    return render(request, 'gestion_materiel/salle/liste_materiels_salle.html', {'salle': salle, 'materiels': materiels})
+
 def ajout_salle(request):
     if request.method == 'POST':
         form = SalleForm(request.POST)
@@ -51,6 +56,7 @@ def supprimer_salle(request, salle_id):
     messages.add_message(request, messages.SUCCESS, "La salle a été supprimée avec succès", extra_tags='danger')
     return redirect('liste_salles')
 
+
 def liste_accessoires(request, materiel_id):
     materiel = Materiel.objects.get(id=materiel_id)
     accessoires = AccessoireMateriel.objects.filter(material=materiel)
@@ -60,8 +66,13 @@ def liste_transferts(request):
     transferts = TransfertMateriel.objects.all()
     return render(request, 'gestion_materiel/transferts/liste_transferts.html', {'transferts': transferts})
 
+"""materiel"""
 def liste_materiels(request):
     materiels = Materiel.objects.all()
     return render(request, 'gestion_materiel/materiel/liste_materiels.html', {'materiels': materiels})
 
-
+def supprimer_materiel(request, materiel_id):
+    materiel = get_object_or_404(Materiel, id=materiel_id)
+    materiel.delete()
+    messages.add_message(request, messages.SUCCESS, "Le matériel a été supprimé avec succès", extra_tags='danger')
+    return redirect('liste_materiels')

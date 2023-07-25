@@ -15,6 +15,9 @@ class Enseignant(models.Model):
         default='aucun'
     )
 
+    def __str__(self):
+        return f"{self.nom} {self.prenom}"
+
 class Salle(models.Model):
     nom = models.CharField(
         max_length=50,
@@ -28,6 +31,12 @@ class Salle(models.Model):
         null=True,
         default='aucun'
     )
+
+    def __str__(self):
+        if self.etage.lower() == "rez-de-chaussée":
+            return f"{self.nom} ({self.etage})"
+        else:
+            return f"{self.nom} ({self.etage} Étage)"
 
     def get_delete_url(self):
         return reverse('supprimer_salle', kwargs={'salle_id': self.id})
@@ -50,7 +59,7 @@ class Materiel(models.Model):
         Enseignant,
         on_delete=models.CASCADE,
         null=True,
-        related_name='materiels_possedes'  # Accesseur inverse unique pour la relation ForeignKey proprietaire
+        related_name='materiels_possedes'
     )
     lieu = models.ForeignKey(
         Salle,
@@ -61,8 +70,11 @@ class Materiel(models.Model):
         Enseignant,
         on_delete=models.CASCADE,
         null=True,
-        related_name='materiels_en_possession'  # Accesseur inverse unique pour la relation ForeignKey possesseur
+        related_name='materiels_en_possession'
     )
+
+    def __str__(self):
+        return self.nom
 
     def get_accessoires_url(self):
         return reverse('liste_accessoires', args=[self.id])
@@ -77,13 +89,13 @@ class TransfertMateriel(models.Model):
         Enseignant,
         on_delete=models.CASCADE,
         null=True,
-        related_name='transferts_sortants'  # Accesseur inverse unique pour la relation ForeignKey ancien_possesseur
+        related_name='transferts_sortants'
     )
     nouveau_possesseur = models.ForeignKey(
         Enseignant,
         on_delete=models.CASCADE,
         null=True,
-        related_name='transferts_entrants'  # Accesseur inverse unique pour la relation ForeignKey nouveau_possesseur
+        related_name='transferts_entrants'
     )
     date_transfert = models.DateField()
     lieu_transfer = models.CharField(
