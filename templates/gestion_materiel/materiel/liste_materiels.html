@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Liste des materiels</title>
+    <title>Liste des matériels</title>
 </head>
 <body>
     {% include 'gestion_materiel/includes/entete.html' %}
 
     <div class="container">
-        <h1>Liste des materiels</h1>
+        <h1>Liste des matériels</h1>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -16,6 +16,7 @@
                     <th>Propriétaire</th>
                     <th>Lieu</th>
                     <th>Possesseur actuel</th>
+                    <th>Voir les accessoires</th>
                     <th>Supprimer</th>
                 </tr>
             </thead>
@@ -25,14 +26,17 @@
                         <td>{{ materiel.nom }}</td>
                         <td>{{ materiel.budget }}</td>
                         <td>{{ materiel.proprietaire.nom }} {{ materiel.proprietaire.prenom }}</td>
+                        <td>{{ materiel.lieu.nom }} ({{ materiel.lieu.etage }})</td>
                         <td>
-                            {% if materiel.lieu.etage == 'rez-de-chaussée' %}
-                                {{ materiel.lieu.nom }} ({{ materiel.lieu.etage }})
+                            {% if materiel.possesseur %}
+                                {{ materiel.possesseur.nom }} {{ materiel.possesseur.prenom }}
                             {% else %}
-                                {{ materiel.lieu.nom }} ({{ materiel.lieu.etage }} Étage)
+                                Aucun
                             {% endif %}
                         </td>
-                        <td>{{ materiel.possesseur.nom }} {{ materiel.possesseur.prenom }}</td>
+                        <td>
+                            <a href="{% url 'liste_accessoires' materiel.id %}" class="btn btn-primary">Voir les accessoires</a>
+                        </td>
                         <td>
                             <form method="post" action="{% url 'supprimer_materiel' materiel.id %}">
                                 {% csrf_token %}
@@ -42,7 +46,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">Aucun materiel trouvé.</td>
+                        <td colspan="7">Aucun matériel trouvé.</td>
                     </tr>
                 {% endfor %}
             </tbody>

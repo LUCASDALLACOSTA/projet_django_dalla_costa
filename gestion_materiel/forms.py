@@ -1,5 +1,5 @@
 from django import forms
-from .models import Enseignant, Salle
+from .models import Enseignant, Salle, AccessoireMateriel
 
 
 class EnseignantForm(forms.ModelForm):
@@ -21,3 +21,18 @@ class SalleForm(forms.ModelForm):
     class Meta:
         model = Salle
         fields = ['nom', 'etage']
+
+# forms.py
+class AccessoireViaMaterielForm(forms.ModelForm):
+    class Meta:
+        model = AccessoireMateriel
+        fields = ('nom', 'present', 'etat')
+        widgets = {
+            'etat': forms.Select(choices=[('fonctionnel', 'Fonctionnel'), ('défaillant', 'Défaillant'), ('Non fonctionnel', 'Non fonctionnel')]),
+        }
+
+    def clean_etat(self):
+        if not self.cleaned_data['present']:
+            return 'Absent'
+        return self.cleaned_data['etat']
+

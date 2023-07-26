@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle
-from .forms import EnseignantForm, SalleForm
+from .forms import EnseignantForm, SalleForm, AccessoireViaMaterielForm
 from django.contrib import messages
 
 def accueil(request):
@@ -57,15 +57,6 @@ def supprimer_salle(request, salle_id):
     return redirect('liste_salles')
 
 
-def liste_accessoires(request, materiel_id):
-    materiel = Materiel.objects.get(id=materiel_id)
-    accessoires = AccessoireMateriel.objects.filter(material=materiel)
-    return render(request, 'gestion_materiel/materiel/liste_accessoires.html', {'materiel': materiel, 'accessoires': accessoires})
-
-def liste_transferts(request):
-    transferts = TransfertMateriel.objects.all()
-    return render(request, 'gestion_materiel/transferts/liste_transferts.html', {'transferts': transferts})
-
 """materiel"""
 def liste_materiels(request):
     materiels = Materiel.objects.all()
@@ -76,3 +67,36 @@ def supprimer_materiel(request, materiel_id):
     materiel.delete()
     messages.add_message(request, messages.SUCCESS, "Le matériel a été supprimé avec succès", extra_tags='danger')
     return redirect('liste_materiels')
+
+
+
+"""accessoire"""
+def liste_accessoires(request, materiel_id):
+    materiel = Materiel.objects.get(id=materiel_id)
+    accessoires = AccessoireMateriel.objects.filter(material=materiel)
+    return render(request, 'gestion_materiel/materiel/accessoire/liste_accessoires.html', {'materiel': materiel, 'accessoires': accessoires})
+
+def supprimer_accessoire(request, materiel_id, accessoire_id):
+    accessoire = get_object_or_404(AccessoireMateriel, id=accessoire_id)
+    accessoire.delete()
+    messages.add_message(request, messages.SUCCESS, "L'accessoire a été supprimé avec succès", extra_tags='danger')
+    return redirect('liste_accessoires', materiel_id=materiel_id)
+
+def ajouter_accessoire_via_materiel(request, materiel_id):
+    materiel = get_object_or_404(Materiel, id=materiel_id)
+
+    if request.method == 'POST':
+        form = AccessoireViaMaterielForm(request.POST)
+        if form.is_valid():
+            accessoire = form.save(commit=False)
+            accessoire.material = materiel
+            accessoire.save()
+            return redirect('liste_accessoires', materiel_id=materiel.id)
+    else:
+        form = AccessoireViaMaterielForm()
+
+    return render(request, 'gestion_materiel/materiel/accessoire/ajout_accessoire_via_materiel.html', {'materiel': materiel, 'form': form})
+
+def liste_transferts(request):
+    transferts = TransfertMateriel.objects.all()
+    return render(request, 'gestion_materiel/transferts/liste_transferts.html', {'transferts': transferts})

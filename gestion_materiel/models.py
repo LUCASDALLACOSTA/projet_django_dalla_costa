@@ -70,6 +70,7 @@ class Materiel(models.Model):
         Enseignant,
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
         related_name='materiels_en_possession'
     )
 
@@ -118,4 +119,9 @@ class AccessoireMateriel(models.Model):
     present = models.BooleanField(
         default=True
     )
-    etat = models.CharField(max_length=100)
+    etat = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
