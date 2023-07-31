@@ -47,13 +47,13 @@ class Materiel(models.Model):
         max_length=100,
         blank=False,
         null=True,
-        default='aucun'
+        default=''
     )
     budget = models.CharField(
         max_length=100,
         blank=False,
         null=True,
-        default='aucun'
+        default=''
     )
     proprietaire = models.ForeignKey(
         Enseignant,
@@ -114,7 +114,8 @@ class AccessoireMateriel(models.Model):
         null=True
     )
     nom = models.CharField(
-        max_length=100
+        max_length=100,
+        blank = True
     )
     present = models.BooleanField(
         default=True

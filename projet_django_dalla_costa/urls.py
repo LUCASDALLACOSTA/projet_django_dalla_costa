@@ -35,10 +35,12 @@ urlpatterns = [
 
     path('gestion_materiel/materiel/liste_materiels', liste_materiels, name='liste_materiels'),
     path('gestion_materiel/materiel/supprimer/<int:materiel_id>/', views.supprimer_materiel, name='supprimer_materiel'),
+    path('gestion_materiel/materiel/ajout_materiel/', views.ajout_materiel, name='ajout_materiel'),
 
     path('gestion_materiel/materiel/<int:materiel_id>/accessoires/', liste_accessoires, name='liste_accessoires'),
     path('gestion_materiel/materiel/<int:materiel_id>/accessoires/supprimer/<int:accessoire_id>', views.supprimer_accessoire, name='supprimer_accessoire'),
     path('gestion_materiel/materiel/<int:materiel_id>/accessoires/ajouter/', views.ajouter_accessoire_via_materiel, name='ajouter_accessoire'),
+    path('gestion_materiel/materiel/<int:materiel_id>/accessoire/<int:accessoire_id>/modifier/', views.modifier_accessoire, name='modifier_accessoire'),
 
     path('gestion_materiel/transferts/liste_transferts', views.liste_transferts, name='liste_transferts'),
 ]
