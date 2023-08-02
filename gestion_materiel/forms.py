@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Enseignant, Salle, AccessoireMateriel, Materiel
+from .models import Enseignant, Salle, AccessoireMateriel, Materiel, TransfertMateriel
 
 
 class EnseignantForm(forms.ModelForm):
@@ -29,7 +29,7 @@ class AccessoireViaMaterielForm(forms.ModelForm):
         model = AccessoireMateriel
         fields = ('nom', 'present', 'etat')
         widgets = {
-            'etat': forms.Select(choices=[('Fonctionnel', 'Fonctionnel'), ('défaillant', 'Défaillant'), ('Non fonctionnel', 'Non fonctionnel')]),
+            'etat': forms.Select(choices=[('Fonctionnel', 'Fonctionnel'), ('Défaillant', 'Défaillant'), ('Non fonctionnel', 'Non fonctionnel')]),
         }
 
     def clean_etat(self):
@@ -54,3 +54,20 @@ AccessoireFormSet = forms.inlineformset_factory(
     form=AccessoireViaMaterielForm,
     extra=2,
 )
+
+class TransfertForm(forms.ModelForm):
+    class Meta:
+        model = TransfertMateriel
+        fields = ('nouveau_possesseur', 'date_transfert', 'lieu_transfer', 'occasion', 'objectif')
+        widgets = {
+            'nouveau_possesseur': forms.Select(attrs={'class': 'form-control'}),
+            'date_transfert': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'lieu_transfer': forms.Select(attrs={'class': 'form-control'}),
+            'occasion': forms.TextInput(attrs={'class': 'form-control'}),
+            'objectif': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nouveau_possesseur'].queryset = Enseignant.objects.all()
+        self.fields['lieu_transfer'].queryset = Salle.objects.all()

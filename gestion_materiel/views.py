@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle
-from .forms import EnseignantForm, SalleForm, AccessoireViaMaterielForm, MaterielForm, AccessoireFormSet
+from .forms import EnseignantForm, SalleForm, AccessoireViaMaterielForm, MaterielForm, AccessoireFormSet, TransfertForm
 from django.contrib import messages
 
 def accueil(request):
@@ -132,6 +132,62 @@ def ajouter_accessoire_via_materiel(request, materiel_id):
 
     return render(request, 'gestion_materiel/materiel/accessoire/ajout_accessoire_via_materiel.html', {'materiel': materiel, 'form': form})
 
-def liste_transferts(request):
-    transferts = TransfertMateriel.objects.all()
-    return render(request, 'gestion_materiel/transferts/liste_transferts.html', {'transferts': transferts})
+"""transfert"""
+from django.shortcuts import render, redirect
+from gestion_materiel.models import Materiel
+
+def choix_materiel(request):
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+        if action == 'historique':
+            materiel_id = request.POST.get('materiel', '')
+            return redirect('historique_transferts', materiel_id=materiel_id)
+        elif action == 'creation':
+            materiel_id = request.POST.get('materiel', '')
+            return redirect('ajout_transfert', materiel_id=materiel_id)
+
+    materiels = Materiel.objects.all()
+    selected_materiel_id = request.session.get('selected_materiel_id', None)
+
+    return render(request, 'gestion_materiel/transfert/choix_materiel.html', {
+        'materiels': materiels,
+        'selected_materiel_id': selected_materiel_id,
+    })
+
+
+def historique_transferts(request, materiel_id):
+    # Ajoutez le code pour afficher l'historique des transferts du matériel avec l'ID materiel_id
+    # Par exemple, vous pouvez récupérer les transferts associés au matériel à l'aide de la clé étrangère.
+
+    return render(request, 'gestion_materiel/transfert/historique_transferts.html', {'materiel_id': materiel_id})
+
+
+def ajout_transfert(request, materiel_id):
+    materiel = Materiel.objects.get(id=materiel_id)
+    accessoires = materiel.accessoiremateriel_set.all()
+
+    enseignants = Enseignant.objects.all()
+    salles = Salle.objects.all()
+
+    if request.method == 'POST':
+        form = TransfertForm(request.POST)
+        if form.is_valid():
+            transfert = form.save(commit=False)
+            transfert.material = materiel
+            transfert.ancien_possesseur = materiel.possesseur
+            transfert.save()
+            return redirect('historique_transferts', materiel_id=materiel.id)
+    else:
+        initial_data = {
+            'material': materiel,
+            'ancien_possesseur': materiel.possesseur,
+        }
+        form = TransfertForm(initial=initial_data)
+
+    return render(request, 'gestion_materiel/transfert/ajout_transfert.html', {
+        'form': form,
+        'materiel': materiel,
+        'accessoires': accessoires,
+        'enseignants': enseignants,
+        'salles': salles,
+    })
