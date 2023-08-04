@@ -1,0 +1,43 @@
+<!-- afficher_transfert.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transfert - {{ transfert.material.nom }}</title>
+</head>
+<body>
+    {% include 'gestion_materiel/includes/entete.html' %}
+
+    <div class="container">
+        <h1>Détails du transfert - {{ transfert.material.nom }}</h1>
+        <p><strong>Nom du matériel :</strong> {{ transfert.material.nom }}</p>
+        <p><strong>Date du transfert :</strong> {{ transfert.date_transfert }}</p>
+        <p><strong>Objectif :</strong> {{ transfert.objectif }}</p>
+        <p><strong>Occasion :</strong> {{ transfert.occasion }}</p>
+        <p><strong>Possesseur précédent :</strong> {{ transfert.ancien_possesseur }}</p>
+        <p><strong>Nouveau possesseur :</strong> {{ transfert.nouveau_possesseur }}</p>
+        <p><strong>Lieu précédent :</strong> {{ transfert.material.lieu }}</p>
+        <p><strong>Nouveau lieu :</strong> {{ salle_transfer.nom }} ({{ salle_transfer.etage }} Etage)</p>
+
+        <h2>Accessoires</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Présence précédente</th>
+                <th>Nouvelle présence</th>
+                <th>État précédent</th>
+                <th>Nouvel état</th>
+            </tr>
+            {% for accessoire in transfert.material.accessoiremateriel_set.all %}
+                <tr>
+                    <td>{{ accessoire.nom }}</td>
+                    <td>{{ accessoire.present }}</td>
+                    <td>{{ accessoire.get_present_display }}</td>
+                    <td>{{ accessoire.etat }}</td>
+                    <td>{{ accessoire.get_etat_display }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

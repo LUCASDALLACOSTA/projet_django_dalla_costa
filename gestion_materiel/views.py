@@ -154,14 +154,6 @@ def choix_materiel(request):
         'selected_materiel_id': selected_materiel_id,
     })
 
-
-def historique_transferts(request, materiel_id):
-    # Ajoutez le code pour afficher l'historique des transferts du matériel avec l'ID materiel_id
-    # Par exemple, vous pouvez récupérer les transferts associés au matériel à l'aide de la clé étrangère.
-
-    return render(request, 'gestion_materiel/transfert/historique_transferts.html', {'materiel_id': materiel_id})
-
-
 def ajout_transfert(request, materiel_id):
     materiel = Materiel.objects.get(id=materiel_id)
     accessoires = materiel.accessoiremateriel_set.all()
@@ -172,11 +164,40 @@ def ajout_transfert(request, materiel_id):
     if request.method == 'POST':
         form = TransfertForm(request.POST)
         if form.is_valid():
+
             transfert = form.save(commit=False)
             transfert.material = materiel
             transfert.ancien_possesseur = materiel.possesseur
+
+            salle_id = request.POST.get('lieu_transfer')
+            salle = Salle.objects.get(id=salle_id)
+
+            if request.POST.get('rendre') == 'Oui':
+                materiel.possesseur = None
+                transfert.nouveau_possesseur = None
+                materiel.lieu = Salle.objects.get(nom="001", etage="rez-de-chaussée")
+            else:
+                materiel.possesseur = transfert.nouveau_possesseur
+                materiel.lieu = salle
+
+            materiel.save()
+
+            for accessoire in accessoires:
+                present_key = 'present_' + str(accessoire.id)
+                etat_key = 'etat_' + str(accessoire.id)
+
+                present_value = request.POST.get(present_key)
+                if present_value == "Oui":
+                    accessoire.present = True
+                    accessoire.etat = request.POST.get(etat_key)
+                else:
+                    accessoire.present = False
+                    accessoire.etat = "Absent"
+
+                accessoire.save()
+
             transfert.save()
-            return redirect('historique_transferts', materiel_id=materiel.id)
+            return redirect('afficher_transfert', materiel_id=materiel.id, transfert_id=transfert.id)
     else:
         initial_data = {
             'material': materiel,
@@ -190,4 +211,15 @@ def ajout_transfert(request, materiel_id):
         'accessoires': accessoires,
         'enseignants': enseignants,
         'salles': salles,
+    })
+
+def afficher_transfert(request, materiel_id, transfert_id):
+    materiel = Materiel.objects.get(id=materiel_id)
+    transfert = TransfertMateriel.objects.get(id=transfert_id)
+    salle_transfer = transfert.lieu_transfer
+
+    return render(request, 'gestion_materiel/transfert/afficher_transfert.html', {
+        'materiel': materiel,
+        'transfert': transfert,
+        'salle_transfer': salle_transfer,
     })

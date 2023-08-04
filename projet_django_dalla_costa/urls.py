@@ -43,7 +43,7 @@ urlpatterns = [
     path('gestion_materiel/materiel/<int:materiel_id>/accessoire/<int:accessoire_id>/modifier/', views.modifier_accessoire, name='modifier_accessoire'),
 
     path('gestion_materiel/transfert/choix_materiel', views.choix_materiel, name='choix_materiel'),
-    path('gestion_materiel/transfert/historique_transferts/<int:materiel_id>', views.historique_transferts, name='historique_transferts'),
+    path('gestion_materiel/transfert/<int:materiel_id>/afficher_transfert/<int:transfert_id>/', views.afficher_transfert,name='afficher_transfert'),
     path('gestion_materiel/transfert/ajout_transfert/<int:materiel_id>/', views.ajout_transfert, name='ajout_transfert'),
 ]
 

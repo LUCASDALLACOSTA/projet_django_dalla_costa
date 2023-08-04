@@ -49,21 +49,31 @@
             <!-- Nouvelles infos-->
 
             <div class="form-group">
-                <label style="font-weight: bold;">Nouveau possesseur :</label>
+                <label style="font-weight: bold;">Rendre :</label>
+                <select class="form-control" name="rendre" id="id_rendre" onchange="updateFields()">
+                    <option value="Oui">Oui</option>
+                    <option value="Non" selected>Non</option>
+                </select>
+            </div>
+
+           <div class="form-group">
+                <label style="font-weight: bold;">Nouveau possesseur (Ne pas prendre en compte si le matériel est rendu):</label>
                 <select class="form-control" name="nouveau_possesseur">
-                    <option value="" selected disabled>Choisir un possesseur</option>
                     {% for enseignant in enseignants %}
-                        <option value="{{ enseignant.id }}">{{ enseignant.nom }} {{ enseignant.prenom }}</option>
+                        <option value="{{ enseignant.id }}">
+                            {{ enseignant.nom }} {{ enseignant.prenom }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="form-group">
-                <label style="font-weight: bold;">Lieu de transfert :</label>
+                <label style="font-weight: bold;">Lieu de transfert (Ne pas prendre en compte si le matériel est rendu):</label>
                 <select class="form-control" name="lieu_transfer">
-                    <option value="" selected disabled>Choisir un lieu de transfert</option>
                     {% for salle in salles %}
-                        <option value="{{ salle.id }}">{{ salle.nom }} {{ salle.etage }}</option>
+                        <option value="{{ salle.id }}">
+                            {{ salle.nom }} {{ salle.etage }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>

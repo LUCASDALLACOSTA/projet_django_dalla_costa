@@ -67,6 +67,7 @@ class TransfertForm(forms.ModelForm):
             'objectif': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nouveau_possesseur'].queryset = Enseignant.objects.all()

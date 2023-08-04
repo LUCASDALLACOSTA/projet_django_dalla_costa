@@ -99,13 +99,17 @@ class TransfertMateriel(models.Model):
         related_name='transferts_entrants'
     )
     date_transfert = models.DateField()
-    lieu_transfer = models.CharField(
-        max_length=100
+    lieu_transfer = models.ForeignKey(
+        Salle,
+        on_delete=models.CASCADE
     )
     occasion = models.CharField(
         max_length=100
     )
     objectif = models.TextField()
+
+    def __str__(self):
+        return f"Transfert {self.material.nom} - {self.date_transfert}"
 
 class AccessoireMateriel(models.Model):
     material = models.ForeignKey(
