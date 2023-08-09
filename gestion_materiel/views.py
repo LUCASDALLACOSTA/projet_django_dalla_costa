@@ -170,6 +170,7 @@ def ajout_transfert(request, materiel_id):
             transfert = form.save(commit=False)
             transfert.material = materiel
             transfert.ancien_possesseur = materiel.possesseur
+            transfert.ancien_lieu = materiel.lieu
 
             salle_id = form.cleaned_data['nouveau_lieu'].id
             salle = Salle.objects.get(id=salle_id)
@@ -215,6 +216,7 @@ def ajout_transfert(request, materiel_id):
         initial_data = {
             'material': materiel,
             'ancien_possesseur': materiel.possesseur,
+            'ancien_lieu': materiel.lieu,
         }
         form = TransfertForm(initial=initial_data)
 
