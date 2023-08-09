@@ -8,7 +8,9 @@
 
     <div class="container">
         <h1>Modifier l'accessoire</h1>
-        <form method="post">
+        <a href="{% url 'liste_accessoires' materiel_id=materiel.id %}" class="btn btn-primary">Retour à la liste des accessoires</a>
+        <div style="margin-top: 10px;"></div>
+    <form method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.nom.id_for_label }}">Nom de l'accessoire :</label>

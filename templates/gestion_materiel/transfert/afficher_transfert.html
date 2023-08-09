@@ -1,5 +1,3 @@
-<!-- afficher_transfert.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +8,9 @@
 
     <div class="container">
         <h1>Détails du transfert - {{ transfert.material.nom }}</h1>
+        <a href="{% url 'liste_historique_transferts' materiel_id=transfert.material.id %}" class="btn btn-primary">Liste des historiques des transferts</a>
+        <div style="margin-top: 10px;"></div>
+
         <p><strong>Nom du matériel :</strong> {{ transfert.material.nom }}</p>
         <p><strong>Date du transfert :</strong> {{ transfert.date_transfert }}</p>
         <p><strong>Objectif :</strong> {{ transfert.objectif }}</p>
@@ -17,7 +18,7 @@
         <p><strong>Possesseur précédent :</strong> {{ transfert.ancien_possesseur }}</p>
         <p><strong>Nouveau possesseur :</strong> {{ transfert.nouveau_possesseur }}</p>
         <p><strong>Lieu précédent :</strong> {{ transfert.material.lieu }}</p>
-        <p><strong>Nouveau lieu :</strong> {{ salle_transfer.nom }} ({{ salle_transfer.etage }} Etage)</p>
+        <p><strong>Nouveau lieu :</strong> {{ transfert.lieu_transfer }}</p>
 
         <h2>Accessoires</h2>
         <table>

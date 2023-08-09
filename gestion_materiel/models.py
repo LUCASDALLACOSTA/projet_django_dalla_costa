@@ -99,9 +99,17 @@ class TransfertMateriel(models.Model):
         related_name='transferts_entrants'
     )
     date_transfert = models.DateField()
-    lieu_transfer = models.ForeignKey(
+    ancien_lieu = models.ForeignKey(
         Salle,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='transferts_sortants',
+        null=True
+    )
+    nouveau_lieu = models.ForeignKey(
+        Salle,
+        on_delete=models.CASCADE,
+        related_name='transferts_entrants',
+        null=True
     )
     occasion = models.CharField(
         max_length=100
@@ -130,3 +138,31 @@ class AccessoireMateriel(models.Model):
         null=True
     )
 
+class TransfertAccessoire(models.Model):
+    transfert = models.ForeignKey(
+        TransfertMateriel,
+        on_delete=models.CASCADE
+    )
+    accessoire = models.ForeignKey(
+        AccessoireMateriel,
+        on_delete=models.CASCADE
+    )
+    ancienne_presence = models.BooleanField(
+        default=True
+    )
+    nouvelle_presence = models.BooleanField(
+        default=True
+    )
+    ancien_etat = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+    nouveau_etat = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f"Transfert {self.transfert.material.nom} - Accessoire {self.accessoire.nom}"

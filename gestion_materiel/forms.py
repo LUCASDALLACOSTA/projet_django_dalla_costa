@@ -58,11 +58,11 @@ AccessoireFormSet = forms.inlineformset_factory(
 class TransfertForm(forms.ModelForm):
     class Meta:
         model = TransfertMateriel
-        fields = ('nouveau_possesseur', 'date_transfert', 'lieu_transfer', 'occasion', 'objectif')
+        fields = ('nouveau_possesseur', 'date_transfert', 'nouveau_lieu', 'occasion', 'objectif')
         widgets = {
             'nouveau_possesseur': forms.Select(attrs={'class': 'form-control'}),
             'date_transfert': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'lieu_transfer': forms.Select(attrs={'class': 'form-control'}),
+            'nouveau_lieu': forms.Select(attrs={'class': 'form-control'}),
             'occasion': forms.TextInput(attrs={'class': 'form-control'}),
             'objectif': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
@@ -71,4 +71,4 @@ class TransfertForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nouveau_possesseur'].queryset = Enseignant.objects.all()
-        self.fields['lieu_transfer'].queryset = Salle.objects.all()
+        self.fields['nouveau_lieu'].queryset = Salle.objects.all()

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle
+from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle, TransfertAccessoire
 from .forms import EnseignantForm, SalleForm, AccessoireViaMaterielForm, MaterielForm, AccessoireFormSet, TransfertForm
 from django.contrib import messages
 
@@ -106,15 +106,17 @@ def supprimer_accessoire(request, materiel_id, accessoire_id):
 
 def modifier_accessoire(request, materiel_id, accessoire_id):
     accessoire = get_object_or_404(AccessoireMateriel, id=accessoire_id)
+    materiel = Materiel.objects.get(id=materiel_id)
     if request.method == 'POST':
         form = AccessoireViaMaterielForm(request.POST, instance=accessoire)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Accessoire modifié avec succès')
             return redirect('liste_accessoires', materiel_id=materiel_id)
     else:
         form = AccessoireViaMaterielForm(instance=accessoire)
 
-    return render(request, 'gestion_materiel/materiel/accessoire/modifier_accessoire.html', {'form': form})
+    return render(request, 'gestion_materiel/materiel/accessoire/modifier_accessoire.html', {'form': form, 'materiel': materiel})
 
 def ajouter_accessoire_via_materiel(request, materiel_id):
     materiel = get_object_or_404(Materiel, id=materiel_id)
@@ -141,7 +143,7 @@ def choix_materiel(request):
         action = request.POST.get('action', '')
         if action == 'historique':
             materiel_id = request.POST.get('materiel', '')
-            return redirect('historique_transferts', materiel_id=materiel_id)
+            return redirect('liste_historique_transferts', materiel_id=materiel_id)
         elif action == 'creation':
             materiel_id = request.POST.get('materiel', '')
             return redirect('ajout_transfert', materiel_id=materiel_id)
@@ -169,7 +171,7 @@ def ajout_transfert(request, materiel_id):
             transfert.material = materiel
             transfert.ancien_possesseur = materiel.possesseur
 
-            salle_id = request.POST.get('lieu_transfer')
+            salle_id = request.POST.get('nouveau_lieu')
             salle = Salle.objects.get(id=salle_id)
 
             if request.POST.get('rendre') == 'Oui':
@@ -188,12 +190,23 @@ def ajout_transfert(request, materiel_id):
 
                 present_value = request.POST.get(present_key)
                 if present_value == "Oui":
-                    accessoire.present = True
-                    accessoire.etat = request.POST.get(etat_key)
+                    nouvelle_presence = True
+                    nouvel_etat = request.POST.get(etat_key, accessoire.etat)
                 else:
-                    accessoire.present = False
-                    accessoire.etat = "Absent"
+                    nouvelle_presence = False
+                    nouvel_etat = "Absent"
 
+                TransfertAccessoire.objects.create(
+                    transfert=transfert,
+                    accessoire=accessoire,
+                    ancienne_presence=accessoire.present,
+                    nouvelle_presence=nouvelle_presence,
+                    ancien_etat=accessoire.etat,
+                    nouveau_etat=nouvel_etat
+                )
+
+                accessoire.present = nouvelle_presence
+                accessoire.etat = nouvel_etat
                 accessoire.save()
 
             transfert.save()
@@ -213,13 +226,28 @@ def ajout_transfert(request, materiel_id):
         'salles': salles,
     })
 
+def liste_historique_transferts(request, materiel_id):
+    materiel = get_object_or_404(Materiel, id=materiel_id)
+    transferts = TransfertMateriel.objects.filter(material=materiel).order_by('-date_transfert')
+
+    return render(request, 'gestion_materiel/transfert/liste_historique_transferts.html', {
+        'materiel': materiel,
+        'transferts': transferts,
+    })
+
 def afficher_transfert(request, materiel_id, transfert_id):
     materiel = Materiel.objects.get(id=materiel_id)
     transfert = TransfertMateriel.objects.get(id=transfert_id)
-    salle_transfer = transfert.lieu_transfer
+    salle_transfer = transfert.nouveau_lieu
 
     return render(request, 'gestion_materiel/transfert/afficher_transfert.html', {
         'materiel': materiel,
         'transfert': transfert,
         'salle_transfer': salle_transfer,
     })
+
+def supprimer_transfert(request, materiel_id, transfert_id):
+    transfert = get_object_or_404(TransfertMateriel, id=transfert_id)
+    transfert.delete()
+    messages.add_message(request, messages.SUCCESS, "Le transfert a été supprimé avec succès", extra_tags='danger')
+    return redirect('liste_historique_transferts', materiel_id=materiel_id)

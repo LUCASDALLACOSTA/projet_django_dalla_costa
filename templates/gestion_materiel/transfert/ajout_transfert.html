@@ -8,6 +8,10 @@
 
     <div class="container">
         <h1>Créer un transfert pour {{ materiel.nom }}</h1>
+        <div class="container text-center">
+            <a href="{% url 'choix_materiel' %}" class="btn btn-primary">Choix du matériel</a>
+        </div>
+        <div style="margin-top: 10px;"></div>
         <form method="post">
             {% csrf_token %}
             <!--info générales-->

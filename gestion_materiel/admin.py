@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Enseignant, Salle, Materiel, TransfertMateriel, AccessoireMateriel
+from .models import Enseignant, Salle, Materiel, TransfertMateriel, AccessoireMateriel, TransfertAccessoire
+
 
 class EnseignantAdmin(admin.ModelAdmin):
     list_display = ("nom", "prenom")
@@ -16,3 +17,4 @@ admin.site.register(Salle)
 admin.site.register(Materiel)
 admin.site.register(TransfertMateriel)
 admin.site.register(AccessoireMateriel, AccessoireMaterielAdmin)
+admin.site.register(TransfertAccessoire)
