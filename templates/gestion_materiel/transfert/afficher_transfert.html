@@ -17,25 +17,25 @@
         <p><strong>Occasion :</strong> {{ transfert.occasion }}</p>
         <p><strong>Possesseur précédent :</strong> {{ transfert.ancien_possesseur }}</p>
         <p><strong>Nouveau possesseur :</strong> {{ transfert.nouveau_possesseur }}</p>
-        <p><strong>Lieu précédent :</strong> {{ transfert.material.lieu }}</p>
-        <p><strong>Nouveau lieu :</strong> {{ transfert.lieu_transfer }}</p>
+        <p><strong>Lieu précédent :</strong> {{ transfert.ancien_lieu }}</p>
+        <p><strong>Nouveau lieu :</strong> {{ transfert.nouveau_lieu }}</p>
 
         <h2>Accessoires</h2>
-        <table>
+       <table>
             <tr>
                 <th>Nom</th>
-                <th>Présence précédente</th>
+                <th>Ancienne présence</th>
                 <th>Nouvelle présence</th>
-                <th>État précédent</th>
+                <th>Ancien état</th>
                 <th>Nouvel état</th>
             </tr>
-            {% for accessoire in transfert.material.accessoiremateriel_set.all %}
+            {% for accessoire in transfert.transfertaccessoire_set.all %}
                 <tr>
-                    <td>{{ accessoire.nom }}</td>
-                    <td>{{ accessoire.present }}</td>
-                    <td>{{ accessoire.get_present_display }}</td>
-                    <td>{{ accessoire.etat }}</td>
-                    <td>{{ accessoire.get_etat_display }}</td>
+                    <td>{{ accessoire.accessoire.nom }}</td>
+                    <td>{% if accessoire.ancienne_presence %}Oui{% else %}Non{% endif %}</td>
+                    <td>{% if accessoire.nouvelle_presence %}Oui{% else %}Non{% endif %}</td>
+                    <td>{{ accessoire.ancien_etat }}</td>
+                    <td>{{ accessoire.nouveau_etat }}</td>
                 </tr>
             {% endfor %}
         </table>

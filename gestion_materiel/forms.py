@@ -62,11 +62,14 @@ class TransfertForm(forms.ModelForm):
         widgets = {
             'nouveau_possesseur': forms.Select(attrs={'class': 'form-control'}),
             'date_transfert': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'nouveau_lieu': forms.Select(attrs={'class': 'form-control'}),
             'occasion': forms.TextInput(attrs={'class': 'form-control'}),
             'objectif': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
+    nouveau_lieu = forms.ModelChoiceField(
+        queryset=Salle.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

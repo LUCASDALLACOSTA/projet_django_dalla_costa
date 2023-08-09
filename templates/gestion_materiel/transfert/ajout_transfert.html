@@ -73,7 +73,7 @@
 
             <div class="form-group">
                 <label style="font-weight: bold;">Lieu de transfert (Ne pas prendre en compte si le matériel est rendu):</label>
-                <select class="form-control" name="lieu_transfer">
+                <select class="form-control" name="nouveau_lieu">
                     {% for salle in salles %}
                         <option value="{{ salle.id }}">
                             {{ salle.nom }} {{ salle.etage }}

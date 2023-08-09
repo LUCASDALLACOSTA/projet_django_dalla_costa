@@ -171,7 +171,7 @@ def ajout_transfert(request, materiel_id):
             transfert.material = materiel
             transfert.ancien_possesseur = materiel.possesseur
 
-            salle_id = request.POST.get('nouveau_lieu')
+            salle_id = form.cleaned_data['nouveau_lieu'].id
             salle = Salle.objects.get(id=salle_id)
 
             if request.POST.get('rendre') == 'Oui':
@@ -183,6 +183,7 @@ def ajout_transfert(request, materiel_id):
                 materiel.lieu = salle
 
             materiel.save()
+            transfert.save()
 
             for accessoire in accessoires:
                 present_key = 'present_' + str(accessoire.id)
@@ -209,7 +210,6 @@ def ajout_transfert(request, materiel_id):
                 accessoire.etat = nouvel_etat
                 accessoire.save()
 
-            transfert.save()
             return redirect('afficher_transfert', materiel_id=materiel.id, transfert_id=transfert.id)
     else:
         initial_data = {
