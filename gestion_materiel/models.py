@@ -80,6 +80,10 @@ class Materiel(models.Model):
     def get_accessoires_url(self):
         return reverse('liste_accessoires', args=[self.id])
 
+    @classmethod
+    def get_materiels_possedes(cls, enseignant):
+        return cls.objects.filter(possesseur__icontains=f"{enseignant.nom} {enseignant.prenom}")
+
 class TransfertMateriel(models.Model):
     material = models.ForeignKey(
         Materiel,

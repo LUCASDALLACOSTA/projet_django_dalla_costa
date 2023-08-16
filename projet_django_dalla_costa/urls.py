@@ -27,6 +27,8 @@ urlpatterns = [
     path('gestion_materiel/enseignant/liste_enseignants', liste_enseignants, name='liste_enseignants'),
     path('gestion_materiel/enseignant/ajout_enseignant', ajout_enseignant, name='ajout_enseignant'),
     path('gestion_materiel/enseignant/<int:enseignant_id>/supprimer', views.supprimer_enseignant, name='supprimer_enseignant'),
+    path('gestion_materiel/enseignant/<int:enseignant_id>/materiels_possedes/', views.liste_materiels_possedes, name='liste_materiels_possedes'),
+    path('gestion_materiel/enseignant/<int:enseignant_id>/materiels_proprietaire/', views.liste_materiels_proprietaire, name='liste_materiels_proprietaire'),
 
     path('gestion_materiel/salle/liste_salles', liste_salles, name='liste_salles'),
     path('liste_materiels_salle/<int:salle_id>/', views.liste_materiels_salle, name='liste_materiels_salle'),

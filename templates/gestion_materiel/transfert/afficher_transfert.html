@@ -37,6 +37,10 @@
                     <td>{{ accessoire.ancien_etat }}</td>
                     <td>{{ accessoire.nouveau_etat }}</td>
                 </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Il n'y a pas d'accessoire associé.</td>
+                </tr>
             {% endfor %}
         </table>
     </div>

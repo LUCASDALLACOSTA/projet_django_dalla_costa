@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Enseignant, Materiel, AccessoireMateriel, TransfertMateriel, Salle, TransfertAccessoire
 from .forms import EnseignantForm, SalleForm, AccessoireViaMaterielForm, MaterielForm, AccessoireFormSet, TransfertForm
@@ -21,6 +22,32 @@ def ajout_enseignant(request):
     else:
         form = EnseignantForm()
     return render(request, 'gestion_materiel/enseignant/ajout_enseignant.html', {'form': form})
+
+
+def liste_materiels_possedes(request, enseignant_id):
+    enseignant = Enseignant.objects.get(id=enseignant_id)
+
+    materiels = Materiel.objects.filter(Q(possesseur__nom__icontains=enseignant.nom) & Q(possesseur__prenom__icontains=enseignant.prenom))
+
+    context = {
+        'enseignant': enseignant,
+        'materiels': materiels,
+    }
+
+    return render(request, 'gestion_materiel/enseignant/liste_materiels_possedes.html', context)
+
+
+def liste_materiels_proprietaire(request, enseignant_id):
+    enseignant = Enseignant.objects.get(id=enseignant_id)
+
+    materiels = Materiel.objects.filter(Q(proprietaire__nom__icontains=enseignant.nom) & Q(proprietaire__prenom__icontains=enseignant.prenom))
+
+    context = {
+        'enseignant': enseignant,
+        'materiels': materiels,
+    }
+
+    return render(request, 'gestion_materiel/enseignant/liste_materiels_proprietaire.html', context)
 
 def supprimer_enseignant(request, enseignant_id):
     if request.method == 'POST':
